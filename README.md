@@ -1,5 +1,7 @@
 #  Roast & Code Café ☕ Expansion Simulation
 
+![Area](https://github.com/raoufchebri/scenario-analysis-neon-modal/assets/13738772/26d7da53-ee0a-476e-9a3d-ec02152c98cc)
+
 ## Overview
 Roast & Code Café ☕ is a place to explore a wide range of roasted coffee, and is increasing in popularity, especially among Python developers. 
 In this project, we will run scenario analysis that will help determine when and where Roast & Code Café ☕ should open their next shops.
@@ -68,9 +70,13 @@ Replace the placeholder values with your Postgres credentials and Neon project d
 
 ### Find your Neon Project ID
 You can find your Neon Project ID under the `Project Settings` tab.
+<img width="1701" alt="Screenshot 2024-03-20 at 16 06 37" src="https://github.com/raoufchebri/scenario-analysis-neon-modal/assets/13738772/16b52474-4c1a-47c2-a56b-192770bb0781">
+
 
 ### Create a Neon API key
 To create a Neon API key, naviagte to your account settings and click on `API Keys`. Click on `Generate a New API Key`, give a name to your API key and click `Create`.
+
+<img width="1035" alt="Screenshot 2024-03-20 at 16 06 18" src="https://github.com/raoufchebri/scenario-analysis-neon-modal/assets/13738772/d0770e51-2bd4-44e0-a9d5-1803cd93e22e">
 
 ## Running the Application
 Navigate to the project directory in your terminal and run the Streamlit application using:
@@ -94,3 +100,4 @@ You can save new locations in the current scenario, or in a new one.
 ### Run simulations
 To run a simulaiton, you can select your locations and specify when you plan to open a new location in the next 26 weeks.
 You can select multiple locations and add comma seperated opening weeks.
+<img width="1701" alt="Screenshot 2024-03-20 at 16 29 26" src="https://github.com/raoufchebri/scenario-analysis-neon-modal/assets/13738772/5cca8071-44f7-4c40-aa82-caadb7a5bc1a">
