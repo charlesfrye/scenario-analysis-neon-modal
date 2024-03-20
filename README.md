@@ -1,6 +1,6 @@
 #  Roast & Code Café ☕ Expansion Simulation
 
-![Area](https://github.com/raoufchebri/scenario-analysis-neon-modal/assets/13738772/26d7da53-ee0a-476e-9a3d-ec02152c98cc)
+https://github.com/raoufchebri/scenario-analysis-neon-modal/assets/13738772/1d86c8d6-8c9c-47b4-9c3d-dd4910ea32b5
 
 ## Overview
 Roast & Code Café ☕ is a place to explore a wide range of roasted coffee, and is increasing in popularity, especially among Python developers. 
