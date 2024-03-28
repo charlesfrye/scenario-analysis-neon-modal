@@ -1,55 +1,50 @@
-import streamlit as st
+import modal
 import pandas as pd
 import plotly.express as px
-from db import (
-    fetch_simulation_data_from_db,
-    fetch_simulation_names_from_db,
-    get_branches,
-    get_db_host,
-    get_locations,
-    save_simulation_to_db,
-)
+import streamlit as st
+
+from backend import db
 
 st.title("My Next Coffee Shops Simulation")
 
-# Assuming an average price per coffee of $5 and COGS per coffee of $2
+api_client = modal.Cls.lookup("coffeeshop-neon-client", "ApiClient")()
+
+# TODO: make these configurable
 average_price = 5
 cogs_per_coffee = 2
-operating_days = 30  # Assuming 30 operating days in a month
+operating_days = 30
 
-branches = get_branches()
+branches = api_client.get_branches.remote()
 branch_names = [branch[1] for branch in branches]
 selected_branch_name = st.selectbox("Select a Branch", branch_names)
 selected_branch_id = [
     branch[0] for branch in branches if branch[1] == selected_branch_name
 ][0]
-selected_host = get_db_host(selected_branch_id)
+selected_host = api_client.get_host.remote(selected_branch_id)
 
+DbClient = modal.Cls.lookup("coffeeshop-neon-client", "DbClient")
+client = DbClient(selected_host)
 
-simulation_names = [""] + fetch_simulation_names_from_db(selected_host)
+simulation_names = [""] + db.simulation.fetch_simulation_names(client)
 selected_simulation_name = st.selectbox(
     "Select a Simulation", options=simulation_names, index=0
 )
 
-# Fetch host and locations for the selected branch
-locations = get_locations(
-    selected_host
-)  # Assuming it now returns detailed location info
+locations = db.location.get_locations(client)
 
-# Initialize or update session state as needed
 if "simulation_run" not in st.session_state:
     st.session_state["simulation_run"] = False
 if "cumulative_net_profit" not in st.session_state:
     st.session_state["cumulative_net_profit"] = pd.Series([])
 
 if selected_simulation_name != "":
-    simulation_data_raw = fetch_simulation_data_from_db(
-        selected_simulation_name, selected_host
+    simulation_data_raw = db.simulation.fetch_simulation(
+        selected_simulation_name, selected_host, client
     )
     simulation_data = pd.DataFrame(
         simulation_data_raw, columns=["Week", "Cumulative Net Profit"]
     )
-    # Assuming simulation_data is a DataFrame with 'Week' and 'Cumulative Net Profit'
+
     fig = px.line(
         simulation_data,
         x="Week",
@@ -112,10 +107,10 @@ def display_location_cashflow_multiple():
                                 for loc, week in zip(selected_locations, opening_weeks)
                             ]
                         )
-                        st.session_state["cumulative_net_profit"] = (
-                            calculate_cumulative_net_profit_multiple(
-                                locations_opening_weeks
-                            )
+                        st.session_state[
+                            "cumulative_net_profit"
+                        ] = calculate_cumulative_net_profit_multiple(
+                            locations_opening_weeks
                         )
                         st.session_state["simulation_run"] = True
                         st.session_state["simulation_name"] = simulation_name
@@ -125,16 +120,14 @@ def display_location_cashflow_multiple():
         with col2:
             if st.session_state["simulation_run"]:
                 if st.button("Save Simulation"):
-                    # Ensure this function is defined and handles saving properly
-                    save_simulation_to_db(
+                    db.simulation.save_simulation(
                         st.session_state["simulation_name"],
                         st.session_state["cumulative_net_profit"],
-                        selected_host,
+                        client,
                     )
                     st.success("Simulation results saved successfully.")
 
         if st.session_state["simulation_run"]:
-            # Prepare data for plotting
             weeks = [f"Week {i+1}" for i in range(26)]
             df = pd.DataFrame(
                 {
@@ -142,7 +135,6 @@ def display_location_cashflow_multiple():
                     "Cumulative Net Profit": st.session_state["cumulative_net_profit"],
                 }
             )
-            # Plotting with Plotly
             fig = px.line(
                 df,
                 x="Week",

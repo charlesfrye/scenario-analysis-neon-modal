@@ -1,9 +1,8 @@
 import streamlit as st
 
-# Set up the main page
+st.set_page_config(page_title="Home")
 st.title("Coffee Shop Financial Projection App")
 
-# Introduction and instructions
 st.write(
     """
 Welcome to the Coffee Shop Financial Projection App! This app helps you to project and analyze the financial performance of opening new coffee shops in various locations.
@@ -17,6 +16,3 @@ Welcome to the Coffee Shop Financial Projection App! This app helps you to proje
 2. Go to the "Run Financial Projection Simulation" page to see the financial projections based on your inputs.
 """
 )
-
-# You can optionally add links or actions to navigate between pages, but Streamlit's multipage app setup
-# automatically handles navigation through the sidebar.
